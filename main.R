@@ -12,7 +12,12 @@ random_item <- function(id_list){
   results <- content(GET(paste0("http://www.wikidata.org/w/api.php?action=query&prop=revisions&format=json&rvprop=content&titles=",
                                 id_list)))
   cat(".")
-  return(lapply(results$query$pages, function(x){return(fromJSON(x$revisions[[1]]$`*`))}))
+  return(lapply(results$query$pages, function(x){
+    if(is.null(x$missing)){
+      return(fromJSON(x$revisions[[1]]$`*`))
+    }
+    return(NULL)
+  }))
 }
 
 #Multicore apply random_item to chunks of ids
