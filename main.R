@@ -10,7 +10,7 @@ random_item <- function(id_list){
   
   id_list <- paste(id_list, collapse = "|")
   results <- content(GET(paste0("http://www.wikidata.org/w/api.php?action=query&prop=revisions&format=json&rvprop=content&titles=",
-                                id_list)))
+                                id_list), user_agent("Minify your JSON or the API gets it")))
   cat(".")
   return(lapply(results$query$pages, function(x){
     if(is.null(x$missing)){
