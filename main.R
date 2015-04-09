@@ -124,3 +124,15 @@ ggsave(filename = "sites_without_descriptions_point.svg",
          labs(title = "Sitelinks on Wikidata that lack an equivalent description",
               x = "Percentage of (sitelinks without descriptions/sitelinks with descriptions)",
               y = "Raw count of sitelinks without descriptions"))
+
+image_props <- c("P368","P18","P1442","P94","P109","P181","P692","P117","P154",
+                 "P242","P1621","P41","P158","P1766","P15","P14","P207","P367",
+                 "P491")
+#References and images
+images <- unlist(lapply(wd_items, function(x){
+  if(any(names(x$claims) %in% image_props)){
+    return(TRUE)
+  }
+  return(FALSE)
+}))
+print(sum(images)/length(images))
