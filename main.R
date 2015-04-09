@@ -71,3 +71,56 @@ ggsave(filename = "labels_without_sites_point.svg",
          labs(title = "Items with localised Wikidata labels lacking an equivalent site link",
               x = "Percentage of (labels without sitelinks/labels with sitelinks)",
               y = "Raw count of labels without sitelinks"))
+
+sites_without_labels <- set_retriever(results, "sitelinks", "labels", TRUE)
+sites_with_labels <- set_retriever(results, "sitelinks", "labels", FALSE)
+sites <- merge(sites_without_labels, sites_with_labels, by = "Var1", all.x = TRUE)
+sites$Freq.y[is.na(sites$Freq.y)] <- 0
+sites$sites_lacking_labels <- (sites$Freq.x/(sites$Freq.x + sites$Freq.y))*100
+ggsave(filename = "sites_without_labels_density.svg",
+       plot = ggplot(sites, aes(sites_lacking_labels)) + 
+         geom_density(fill = "royalblue3") +
+         labs(title = "Proportion of Wikidata-linked pages lacking an equivalent language label",
+              x = "Proportion without labels",
+              y = "Density"))
+ggsave(filename = "sites_without_labels_point.svg",
+       plot = ggplot(sites, aes(sites_lacking_labels, Freq.x, label = Var1)) + 
+         geom_text() +
+         labs(title = "Items linked to Wikidata that lack an equivalent language label",
+              x = "Percentage of (sitelinks without labels/sitelinks with labels)",
+              y = "Raw count of sitelinks without labels"))
+
+descriptions_without_sites <- set_retriever(results, "descriptions", "sitelinks", TRUE)
+descriptions_with_sites <- set_retriever(results, "descriptions", "sitelinks", FALSE)
+descriptions <- merge(descriptions_without_sites, descriptions_with_sites, by = "Var1", all.x = TRUE)
+descriptions$Freq.y[is.na(descriptions$Freq.y)] <- 0
+descriptions$descriptions_without_sites <- (descriptions$Freq.x/(descriptions$Freq.x + descriptions$Freq.y))*100
+ggsave(filename = "descriptions_without_sites_density.svg",
+       plot = ggplot(descriptions, aes(descriptions_without_sites)) + 
+         geom_density(fill = "royalblue3") +
+         labs(title = "Proportion of descriptions without same-language Wikidata-linked pages",
+              x = "Proportion without pages",
+              y = "Density"))
+ggsave(filename = "descriptions_without_sites_point.svg",
+       plot = ggplot(descriptions, aes(descriptions_without_sites, Freq.x, label = Var1)) + 
+         geom_text() +
+         labs(title = "Descriptions on Wikidata that lack an equivalent sitelink",
+              x = "Percentage of (descriptions without sitelinks/sitelinks with descriptions)",
+              y = "Raw count of descriptions without sitelinks"))
+sites_without_descriptions <- set_retriever(results, "sitelinks", "descriptions", TRUE)
+sites_with_descriptions <- set_retriever(results, "sitelinks", "descriptions", FALSE)
+sites <- merge(sites_without_descriptions, sites_with_descriptions, by = "Var1", all.x = TRUE)
+sites$Freq.y[is.na(sites$Freq.y)] <- 0
+sites$sites_lacking_descriptions <- (sites$Freq.x/(sites$Freq.x + sites$Freq.y))*100
+ggsave(filename = "sites_without_descriptions_density.svg",
+       plot = ggplot(sites, aes(sites_lacking_descriptions)) + 
+         geom_density(fill = "royalblue3") +
+         labs(title = "Proportion of links to sites without same-language descriptions",
+              x = "Proportion without desscriptions",
+              y = "Density"))
+ggsave(filename = "sites_without_descriptions_point.svg",
+       plot = ggplot(sites, aes(sites_lacking_descriptions, Freq.x, label = Var1)) + 
+         geom_text() +
+         labs(title = "Sitelinks on Wikidata that lack an equivalent description",
+              x = "Percentage of (sitelinks without descriptions/sitelinks with descriptions)",
+              y = "Raw count of sitelinks without descriptions"))
